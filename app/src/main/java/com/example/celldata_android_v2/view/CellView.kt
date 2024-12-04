@@ -1,10 +1,9 @@
-package com.example.celldata_android_v2.ui.home
+package com.example.celldata_android_v2.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import cz.mroczis.netmonster.core.model.cell.*
-import cz.mroczis.netmonster.core.util.nullIf
 
 class CellView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

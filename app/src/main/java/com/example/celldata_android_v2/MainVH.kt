@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cz.mroczis.netmonster.core.model.cell.ICell
-import cz.mroczis.netmonster.sample.databinding.ViewCellBinding
+import com.example.celldata_android_v2.databinding.ViewCellBinding
 
 class MainVH(
     private val binding: ViewCellBinding

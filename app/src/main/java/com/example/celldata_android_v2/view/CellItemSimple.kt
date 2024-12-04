@@ -1,11 +1,11 @@
-package com.example.celldata_android_v2.ui.home
+package com.example.celldata_android_v2.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.view.updatePadding
-import cz.example.celldata_android_v2.databinding.ViewCellItemSimpleBinding
+import com.example.celldata_android_v2.databinding.ViewCellItemSimpleBinding
 
 class CellItemSimple @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -25,7 +25,4 @@ class CellItemSimple @JvmOverloads constructor(
         this.title.text = title
         this.message.text = message
     }
-
-
-
 }
