@@ -23,7 +23,7 @@ class CellLoggerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val cellLoggerViewModel =
-            ViewModelProvider(this).get(CellLoggerViewModel::class.java)
+            ViewModelProvider(this)[CellLoggerViewModel::class.java]
 
         _binding = FragmentCellLoggerBinding.inflate(inflater, container, false)
         val root: View = binding.root

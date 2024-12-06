@@ -16,12 +16,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
 import cz.mroczis.netmonster.core.factory.NetMonsterFactory
 import com.example.celldata_android_v2.databinding.ActivityMainBinding
+import com.example.celldata_android_v2.ui.cellinfo.CellInfoFragment
+import com.example.celldata_android_v2.ui.celllogger.CellLoggerFragment
 
-/**
- * Activity periodically updates data (once in [REFRESH_RATIO] ms) when it's on foreground.
- */
 class MainActivity : AppCompatActivity() {
 
     companion object {
@@ -35,33 +35,67 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        with(binding) {
-            setContentView(root)
-            recycler.adapter = adapter
+        setupBottomNavigation()
+        setupWindowInsets()
 
-            ViewCompat.setOnApplyWindowInsetsListener(root) { v, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    topMargin = insets.top
-                    leftMargin = insets.left
-                    rightMargin = insets.right
+        // Load default fragment
+        if (savedInstanceState == null) {
+            loadFragment(CellInfoFragment())
+        }
+    }
+
+    private fun setupBottomNavigation() {
+        binding.navView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_cell_info -> {
+                    loadFragment(CellInfoFragment())
+                    true
                 }
-
-                recycler.updatePadding(bottom = insets.bottom)
-                WindowInsetsCompat.CONSUMED
+                R.id.navigation_cell_logger -> {
+                    loadFragment(CellLoggerFragment())
+                    true
+                }
+                else -> false
             }
         }
     }
 
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = insets.top
+                leftMargin = insets.left
+                rightMargin = insets.right
+            }
+
+            binding.fragmentContainer.updatePadding(bottom = insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
     override fun onResume() {
         super.onResume()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
+        checkAndRequestPermissions()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    private fun checkAndRequestPermissions() {
+        if (hasRequiredPermissions()) {
             loop()
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(arrayOf(
@@ -72,9 +106,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        handler.removeCallbacksAndMessages(null)
+    private fun hasRequiredPermissions(): Boolean {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun loop() {
@@ -87,9 +121,7 @@ class MainActivity : AppCompatActivity() {
         NetMonsterFactory.get(this).apply {
             val merged = getCells()
             adapter.data = merged
-
             Log.d("NTM-RES", " \n${merged.joinToString(separator = "\n")}")
         }
     }
-
 }

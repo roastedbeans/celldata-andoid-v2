@@ -1,4 +1,4 @@
-package com.example.celldata_android_v2.view
+package com.example.celldata_android_v2.ui.cellinfo
 
 import android.content.Context
 import android.util.AttributeSet
@@ -149,4 +149,6 @@ class CellView @JvmOverloads constructor(
 
         addView(view)
     }
+
+
 }

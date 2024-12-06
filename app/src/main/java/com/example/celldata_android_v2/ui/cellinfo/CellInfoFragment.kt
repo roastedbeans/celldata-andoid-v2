@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cz.mroczis.netmonster.core.model.cell.ICell
 import com.example.celldata_android_v2.databinding.FragmentCellInfoBinding
 
 class CellInfoFragment : Fragment() {
 
+    private lateinit var cellInfoViewModel: CellInfoViewModel
     private var _binding: FragmentCellInfoBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,17 +21,22 @@ class CellInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val cellInfoViewModel =
+        cellInfoViewModel =
             ViewModelProvider(this)[CellInfoViewModel::class.java]
 
         _binding = FragmentCellInfoBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textCellInfo
-        cellInfoViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        val cellView: CellView = binding.textCellInfo
+
+        // Observe cell data from ViewModel and bind to CellView
+        cellInfoViewModel.cellData.observe(viewLifecycleOwner) { cell ->
+            if (cell != null) {
+                cellView.bind(cell)
+            }
         }
-        return root
+
+        return binding.root
+
     }
 
     override fun onDestroyView() {

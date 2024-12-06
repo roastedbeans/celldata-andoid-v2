@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_cell_info">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_cell_info"
         android:name="com.example.celldata_android_v2.ui.cellinfo.CellInfoFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_cell_info"
         tools:layout="@layout/fragment_cell_info" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_cell_logger"
         android:name="com.example.celldata_android_v2.ui.celllogger.CellLoggerFragment"
         android:label="@string/title_cell_logger"
         tools:layout="@layout/fragment_cell_logger" />
