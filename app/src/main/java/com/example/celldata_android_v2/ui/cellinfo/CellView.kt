@@ -43,6 +43,18 @@ class CellView @JvmOverloads constructor(
                 signal.cqi?.let { addView("CQI", it) }
                 signal.timingAdvance?.let { addView("TA", it) }
                 signal.snr?.let { addView("SNR", it) }
+
+                val signalStrength = signal.rsrp?.let { rsrp ->
+                    when {
+                        rsrp >= -85 -> 4  // Excellent
+                        rsrp >= -95 -> 3  // Good
+                        rsrp >= -105 -> 2 // Fair
+                        rsrp >= -115 -> 1 // Poor
+                        else -> 0         // No signal
+                    }
+                } ?: 0
+
+                addView("Signal Strength", signalStrength)
             }
         }
 
@@ -59,6 +71,18 @@ class CellView @JvmOverloads constructor(
                 signal.evdoEcio?.let { addView("EV EC/IO", it) }
                 signal.evdoRssi?.let { addView("EV RSSI", it) }
                 signal.evdoSnr?.let { addView("EV SNR", it) }
+
+                val signalStrength = signal.cdmaRssi?.let { rssi ->
+                    when {
+                        rssi >= -75 -> 4  // Excellent
+                        rssi >= -85 -> 3  // Good
+                        rssi >= -95 -> 2  // Fair
+                        rssi >= -100 -> 1 // Poor
+                        else -> 0         // No signal
+                    }
+                } ?: 0
+
+                addView("Signal Strength", signalStrength)
             }
         }
 
@@ -79,6 +103,18 @@ class CellView @JvmOverloads constructor(
                 signal.rssi?.let { addView("RSSI", it) }
                 signal.bitErrorRate?.let { addView("BER", it) }
                 signal.timingAdvance?.let { addView("TA", it) }
+
+                val signalStrength = signal.rssi?.let { rssi ->
+                    when {
+                        rssi >= -70 -> 4  // Excellent
+                        rssi >= -85 -> 3  // Good
+                        rssi >= -100 -> 2 // Fair
+                        rssi >= -110 -> 1 // Poor
+                        else -> 0         // No signal
+                    }
+                } ?: 0
+
+                addView("Signal Strength", signalStrength)
             }
         }
 
@@ -95,6 +131,7 @@ class CellView @JvmOverloads constructor(
             cell.tac?.let { addView("TAC", it) }
             cell.pci?.let { addView("PCI", it) }
 
+
             cell.signal.let { signal ->
                 signal.csiRsrp?.let { addView("CSI RSRP", it) }
                 signal.csiRsrq?.let { addView("CSI RSRQ", it) }
@@ -102,6 +139,18 @@ class CellView @JvmOverloads constructor(
                 signal.ssRsrp?.let { addView("SS RSRP", it) }
                 signal.ssRsrq?.let { addView("SS RSRQ", it) }
                 signal.ssSinr?.let { addView("SS SINR", it) }
+
+                val signalStrength = signal.ssRsrp?.let { ssRsrp ->
+                    when {
+                        ssRsrp >= -80 -> 4  // Excellent
+                        ssRsrp >= -90 -> 3  // Good
+                        ssRsrp >= -100 -> 2 // Fair
+                        ssRsrp >= -110 -> 1 // Poor
+                        else -> 0           // No signal
+                    }
+                } ?: 0
+
+                addView("Signal Strength", signalStrength)
             }
         }
 
@@ -125,6 +174,18 @@ class CellView @JvmOverloads constructor(
                 signal.rssi?.let { addView("RSSI", it) }
                 signal.bitErrorRate?.let { addView("BER", it) }
                 signal.rscp?.let { addView("RSCP", it) }
+
+                val signalStrength = signal.rssi?.let { rssi ->
+                    when {
+                        rssi >= -70 -> 4  // Excellent
+                        rssi >= -85 -> 3  // Good
+                        rssi >= -100 -> 2 // Fair
+                        rssi >= -110 -> 1 // Poor
+                        else -> 0         // No signal
+                    }
+                } ?: 0
+
+                addView("Signal Strength", signalStrength)
             }
         }
 
@@ -150,10 +211,23 @@ class CellView @JvmOverloads constructor(
                 signal.rscp?.let { addView("RSCP", it) }
                 signal.ecio?.let { addView("ECIO", it) }
                 signal.ecno?.let { addView("ECNO", it) }
+
+                val signalStrength = signal.rscp?.let { rscp ->
+                    when {
+                        rscp >= -75 -> 4  // Excellent
+                        rscp >= -85 -> 3  // Good
+                        rscp >= -95 -> 2  // Fair
+                        rscp >= -105 -> 1 // Poor
+                        else -> 0         // No signal
+                    }
+                } ?: 0
+
+                addView("Signal Strength", signalStrength)
             }
         }
 
     }
+
 
     fun bind (cell: ICell) {
         removeAllViews()
