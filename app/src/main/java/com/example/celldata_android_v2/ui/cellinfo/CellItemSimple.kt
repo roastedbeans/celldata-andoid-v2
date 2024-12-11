@@ -8,21 +8,19 @@ import androidx.core.view.updatePadding
 import com.example.celldata_android_v2.databinding.ViewCellItemSimpleBinding
 
 class CellItemSimple @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private val binding = ViewCellItemSimpleBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: ViewCellItemSimpleBinding
 
     init {
-        val dp2 = (context.resources.displayMetrics.density * 2).toInt()
-        updatePadding(top = dp2, bottom = dp2)
+        binding = ViewCellItemSimpleBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    fun bind(
-        title: String,
-        message: String
-    ) = with(binding) {
-        this.title.text = title
-        this.message.text = message
+    fun bind(title: String, message: String) {
+        binding.titleView.text = title
+        binding.messageView.text = message
     }
 }

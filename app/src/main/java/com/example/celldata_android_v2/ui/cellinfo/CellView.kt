@@ -2,6 +2,7 @@ package com.example.celldata_android_v2.ui.cellinfo
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.widget.LinearLayout
 import cz.mroczis.netmonster.core.model.cell.*
 
@@ -16,11 +17,14 @@ class CellView @JvmOverloads constructor(
     private val transformer = object : ICellProcessor<Unit> {
 
         override fun processLte(cell: CellLte) {
-            cell.network?.let { addView("NET", "LTE ${it.mcc} ${it.mnc} (${it.iso}) ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "LTE ${cell.connectionStatus.javaClass.simpleName}") }
             cell.band?.let { band ->
                 band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
             }
 
+            cell.network?.mcc?.let {addView("MCC", it)}
+            cell.network?.mnc?.let {addView("MNC", it)}
+            cell.network?.iso?.let {addView("ISO", it)}
             cell.eci?.let { addView("ECI", it) }
             cell.enb?.let { addView("eNb", it) }
             cell.cid?.let { addView("CID", it) }
@@ -59,11 +63,14 @@ class CellView @JvmOverloads constructor(
         }
 
         override fun processGsm(cell: CellGsm) {
-            cell.network?.let { addView("NET", "GSM ${it.mcc} ${it.mnc} (${it.iso}) ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "GSM ${cell.connectionStatus.javaClass.simpleName}") }
             cell.band?.let { band ->
                 band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
             }
 
+            cell.network?.mcc?.let {addView("MCC", it)}
+            cell.network?.mnc?.let {addView("MNC", it)}
+            cell.network?.iso?.let {addView("ISO", it)}
             cell.cid?.let { addView("CID", it) }
             cell.lac?.let { addView("LAC", it) }
             cell.bsic?.let { addView("BSIC", it) }
@@ -76,11 +83,14 @@ class CellView @JvmOverloads constructor(
         }
 
         override fun processNr(cell: CellNr) {
-            cell.network?.let { addView("NET", "NR ${it.mcc} ${it.mnc} (${it.iso}) ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "NR ${cell.connectionStatus.javaClass.simpleName}") }
             cell.band?.let { band ->
                 band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
             }
 
+            cell.network?.mcc?.let {addView("MCC", it)}
+            cell.network?.mnc?.let {addView("MNC", it)}
+            cell.network?.iso?.let {addView("ISO", it)}
             cell.nci?.let { addView("NCI", it) }
             cell.tac?.let { addView("TAC", it) }
             cell.pci?.let { addView("PCI", it) }
@@ -96,16 +106,20 @@ class CellView @JvmOverloads constructor(
         }
 
         override fun processTdscdma(cell: CellTdscdma) {
-            cell.network?.let { addView("NET", "TDS-CDMA ${it.mcc} ${it.mnc} (${it.iso}) ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "TDS-CDMA ${cell.connectionStatus.javaClass.simpleName}") }
             cell.band?.let { band ->
                 band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
             }
 
+            cell.network?.mcc?.let {addView("MCC", it)}
+            cell.network?.mnc?.let {addView("MNC", it)}
+            cell.network?.iso?.let {addView("ISO", it)}
             cell.ci?.let { addView("CI", it) }
             cell.rnc?.let { addView("RNC", it) }
             cell.cid?.let { addView("CID", it) }
             cell.lac?.let { addView("LAC", it) }
             cell.cpid?.let { addView("CPID", it) }
+
 
             cell.signal.let { signal ->
                 signal.rssi?.let { addView("RSSI", it) }
@@ -115,16 +129,20 @@ class CellView @JvmOverloads constructor(
         }
 
         override fun processWcdma(cell: CellWcdma) {
-            cell.network?.let { addView("NET", "WCDMA ${it.mcc} ${it.mnc} (${it.iso}) ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "WCDMA ${cell.connectionStatus.javaClass.simpleName}") }
             cell.band?.let { band ->
                 band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
             }
 
+            cell.network?.mcc?.let {addView("MCC", it)}
+            cell.network?.mnc?.let {addView("MNC", it)}
+            cell.network?.iso?.let {addView("ISO", it)}
             cell.ci?.let { addView("CI", it) }
             cell.rnc?.let { addView("RNC", it) }
             cell.cid?.let { addView("CID", it) }
             cell.lac?.let { addView("LAC", it) }
             cell.psc?.let { addView("PSC", it) }
+
 
             cell.signal.let { signal ->
                 signal.rssi?.let { addView("RSSI", it) }
@@ -147,6 +165,7 @@ class CellView @JvmOverloads constructor(
             bind(title, message.toString())
         }
 
+        Log.d("view","$view");
         addView(view)
     }
 
