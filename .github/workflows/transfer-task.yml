@@ -4,6 +4,7 @@ on:
   pull_request:
     types:
       - opened
+      - edited
 
 jobs:
   move-task:
@@ -31,22 +32,33 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Step 4.1: Extract PR Number
+          # Step 4.1: Extract PR Number and Body
           PR_NUMBER=$(jq -r .number < "${GITHUB_EVENT_PATH}")
+          PR_BODY=$(jq -r .pull_request.body < "${GITHUB_EVENT_PATH}")
           echo "Pull Request Number: $PR_NUMBER"
+          echo "PR Body: $PR_BODY"
 
-          # Step 4.2: Extract Repository Info
+          # Step 4.2: Extract Issue Number from PR Body
+          ISSUE_NUMBER=$(echo "$PR_BODY" | grep -oP '(#\d+)' | head -n 1 | tr -d '#')
+          echo "Linked Issue Number: $ISSUE_NUMBER"
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "No linked issue found in PR."
+            exit 0
+          fi
+
+          # Step 4.3: Extract Repository Info
           REPO_FULL_NAME=${{ github.repository }}
           OWNER=${{ github.repository_owner }}
           REPO_NAME=$(basename "${REPO_FULL_NAME}")
           echo "Repository: $REPO_NAME"
           echo "Owner: $OWNER"
 
-          # Step 4.3: Fetch Linked Project Task ID
-          PROJECT_ITEM_ID=$(gh api graphql -F prNumber="$PR_NUMBER" -F repo="$REPO_NAME" -F owner="$OWNER" -f query='
-            query($prNumber: Int!, $repo: String!, $owner: String!) {
+          # Step 4.4: Fetch Linked Project Task ID from the Issue
+          PROJECT_ITEM_ID=$(gh api graphql -F issueNumber="$ISSUE_NUMBER" -F repo="$REPO_NAME" -F owner="$OWNER" -f query='
+            query($issueNumber: Int!, $repo: String!, $owner: String!) {
               repository(name: $repo, owner: $owner) {
-                pullRequest(number: $prNumber) {
+                issue(number: $issueNumber) {
                   projectItems(first: 1) {
                     nodes {
                       id
@@ -55,15 +67,15 @@ jobs:
                 }
               }
             }
-          ' --jq '.data.repository.pullRequest.projectItems.nodes[0].id')
+          ' --jq '.data.repository.issue.projectItems.nodes[0].id')
 
           if [ -z "$PROJECT_ITEM_ID" ]; then
-            echo "No linked project task found for this pull request."
+            echo "No linked project task found for this issue."
             exit 0
           fi
           echo "Project Item ID: $PROJECT_ITEM_ID"
 
-          # Step 4.4: Find "Needs Review" Column ID in Organization Projects
+          # Step 4.5: Find "Needs Review" Column ID in Organization Projects
           COLUMN_ID=$(gh api graphql -F owner="$OWNER" -f query='
             query($owner: String!) {
               organization(login: $owner) {
@@ -89,7 +101,7 @@ jobs:
           fi
           echo "Needs Review Column ID: $COLUMN_ID"
 
-          # Step 4.5: Move the Project Task to Needs Review
+          # Step 4.6: Move the Project Task to Needs Review
           gh api graphql -F itemId="$PROJECT_ITEM_ID" -F columnId="$COLUMN_ID" -f query='
             mutation($itemId: ID!, $columnId: ID!) {
               updateProjectV2ItemFieldValue(input: {projectId: $columnId, itemId: $itemId, value: "Needs Review"}) {
