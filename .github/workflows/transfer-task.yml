@@ -14,12 +14,12 @@ jobs:
       # Step 1: Checkout repository code
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      # Step 2: Debug GH_TOKEN
-      - name: Debug GH_TOKEN
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: echo "GH_TOKEN is set and available."
+          
+          # Step 2: Debug GH_TOKEN
+          - name: Debug GH_TOKEN
+            env:
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            run: echo "GH_TOKEN is set and available."
 
       # Step 3: Verify GitHub CLI Authentication
       - name: Verify GitHub CLI Authentication
@@ -32,18 +32,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Step 4.1: Extract PR Number and Body
-          PR_NUMBER=$(jq -r .number < "${GITHUB_EVENT_PATH}")
-          PR_BODY=$(jq -r .pull_request.body < "${GITHUB_EVENT_PATH}")
-          echo "Pull Request Number: $PR_NUMBER"
-          echo "PR Body: $PR_BODY"
 
-          # Step 4.2: Extract Issue Number from PR Body
-          ISSUE_NUMBER=$(echo "$PR_BODY" | grep -oP '(#\d+)' | head -n 1 | tr -d '#')
+          # Step 4.1: Extract PR Number and Branch Name
+          PR_NUMBER=$(jq -r .number < "${GITHUB_EVENT_PATH}")
+          BRANCH_NAME=$(jq -r .pull_request.head.ref < "${GITHUB_EVENT_PATH}")
+          echo "Pull Request Number: $PR_NUMBER"
+          echo "Branch Name: $BRANCH_NAME"
+
+          # Step 4.2: Extract Issue Number from Branch Name
+          # Assuming the issue number is the first part of the branch name (e.g., feature/15-test-pr or 15-test-pr)
+          ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -oP '^\d+' | head -n 1)
           echo "Linked Issue Number: $ISSUE_NUMBER"
 
           if [ -z "$ISSUE_NUMBER" ]; then
-            echo "No linked issue found in PR."
+            echo "No issue number found in branch name."
             exit 0
           fi
 
