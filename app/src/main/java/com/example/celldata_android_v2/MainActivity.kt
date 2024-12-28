@@ -18,7 +18,7 @@ import com.example.celldata_android_v2.ui.celllogger.CellLoggerFragment
 
 class MainActivity : AppCompatActivity() {
 
-    // Main activity test pr github actions
+    // Test github actions
 
     private lateinit var binding: ActivityMainBinding
 
