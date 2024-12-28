@@ -32,7 +32,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-
           # Step 4.1: Extract PR Number and Branch Name
           PR_NUMBER=$(jq -r .number < "${GITHUB_EVENT_PATH}")
           BRANCH_NAME=$(jq -r .pull_request.head.ref < "${GITHUB_EVENT_PATH}")
