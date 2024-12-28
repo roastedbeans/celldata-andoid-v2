@@ -8,46 +8,42 @@ on:
 jobs:
   move-task:
     runs-on: ubuntu-latest
+
     steps:
       # Step 1: Checkout repository code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js (for using `jq` if needed)
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      # Step 3: Debug GH_TOKEN
+      # Step 2: Debug GH_TOKEN
       - name: Debug GH_TOKEN
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: echo "GH_TOKEN is set"
+        run: echo "GH_TOKEN is set and available."
 
-      # Step 4: Verify GitHub CLI Authentication
+      # Step 3: Verify GitHub CLI Authentication
       - name: Verify GitHub CLI Authentication
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh auth status
 
-      # Step 5: Move project task to Needs Review
+      # Step 4: Move project task to Needs Review
       - name: Move project task to Needs Review
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the built-in GitHub Actions token
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Step 5.1: Extract PR Number
+          # Step 4.1: Extract PR Number
           PR_NUMBER=$(jq -r .number < "${GITHUB_EVENT_PATH}")
           echo "Pull Request Number: $PR_NUMBER"
 
-          # Step 5.2: Extract Repository Info
+          # Step 4.2: Extract Repository Info
           REPO_FULL_NAME=${{ github.repository }}
           OWNER=${{ github.repository_owner }}
-          echo "Repository: $REPO_FULL_NAME"
+          REPO_NAME=$(basename "${REPO_FULL_NAME}")
+          echo "Repository: $REPO_NAME"
           echo "Owner: $OWNER"
 
-          # Step 5.3: Fetch Linked Project Task ID
-          PROJECT_ITEM_ID=$(gh api graphql -F prNumber="$PR_NUMBER" -F repo="$REPO_FULL_NAME" -F owner="$OWNER" -f query='
+          # Step 4.3: Fetch Linked Project Task ID
+          PROJECT_ITEM_ID=$(gh api graphql -F prNumber="$PR_NUMBER" -F repo="$REPO_NAME" -F owner="$OWNER" -f query='
             query($prNumber: Int!, $repo: String!, $owner: String!) {
               repository(name: $repo, owner: $owner) {
                 pullRequest(number: $prNumber) {
@@ -67,13 +63,15 @@ jobs:
           fi
           echo "Project Item ID: $PROJECT_ITEM_ID"
 
-          # Step 5.4: Find "Needs Review" Column ID
-          COLUMN_ID=$(gh api graphql -F owner="$OWNER" -F repo="$REPO_FULL_NAME" -f query='
-            query($owner: String!, $repo: String!) {
-              user(login: $owner) {
-                projects(first: 10) {
+          # Step 4.4: Find "Needs Review" Column ID in Organization Projects
+          COLUMN_ID=$(gh api graphql -F owner="$OWNER" -f query='
+            query($owner: String!) {
+              organization(login: $owner) {
+                projectsV2(first: 10) {
                   nodes {
-                    columns(first: 10) {
+                    id
+                    title
+                    fields(first: 20) {
                       nodes {
                         id
                         name
@@ -83,7 +81,7 @@ jobs:
                 }
               }
             }
-          ' --jq '.data.user.projects.nodes[].columns.nodes[] | select(.name == "Needs Review") | .id')
+          ' --jq '.data.organization.projectsV2.nodes[].fields.nodes[] | select(.name == "Needs Review") | .id')
 
           if [ -z "$COLUMN_ID" ]; then
             echo "Could not find 'Needs Review' column."
@@ -91,11 +89,11 @@ jobs:
           fi
           echo "Needs Review Column ID: $COLUMN_ID"
 
-          # Step 5.5: Move the Project Task to Needs Review
+          # Step 4.5: Move the Project Task to Needs Review
           gh api graphql -F itemId="$PROJECT_ITEM_ID" -F columnId="$COLUMN_ID" -f query='
             mutation($itemId: ID!, $columnId: ID!) {
-              moveProjectCard(input: {cardId: $itemId, columnId: $columnId}) {
-                card {
+              updateProjectV2ItemFieldValue(input: {projectId: $columnId, itemId: $itemId, value: "Needs Review"}) {
+                projectV2Item {
                   id
                 }
               }
