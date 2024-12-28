@@ -123,15 +123,12 @@ class CellView @JvmOverloads constructor(
             cell.band?.let { band ->
                 band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
             }
-
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
             cell.nci?.let { addView("NCI", it) }
             cell.tac?.let { addView("TAC", it) }
             cell.pci?.let { addView("PCI", it) }
-
-
             cell.signal.let { signal ->
                 signal.csiRsrp?.let { addView("CSI RSRP", it) }
                 signal.csiRsrq?.let { addView("CSI RSRQ", it) }
@@ -139,7 +136,6 @@ class CellView @JvmOverloads constructor(
                 signal.ssRsrp?.let { addView("SS RSRP", it) }
                 signal.ssRsrq?.let { addView("SS RSRQ", it) }
                 signal.ssSinr?.let { addView("SS SINR", it) }
-
                 val signalStrength = signal.ssRsrp?.let { ssRsrp ->
                     when {
                         ssRsrp >= -80 -> 4  // Excellent
