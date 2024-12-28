@@ -17,7 +17,7 @@ import com.example.celldata_android_v2.ui.cellinfo.CellInfoFragment
 import com.example.celldata_android_v2.ui.celllogger.CellLoggerFragment
 
 class MainActivity : AppCompatActivity() {
-
+    // test comment
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
