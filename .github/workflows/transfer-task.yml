@@ -14,7 +14,7 @@ jobs:
 
       - name: Move project task to Needs Review
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
+          GH_TOKEN: ${{ secrets.PAT_GITHUB }}  # Set GH_TOKEN for GitHub CLI
         run: |
           # Define variables
           PR_NUMBER=$(jq -r .number < "${GITHUB_EVENT_PATH}")
