@@ -22,6 +22,7 @@ mockkVersion = "1.13.13"
 navigationFragmentKtx = "2.6.0"
 navigationUiKtx = "2.6.0"
 recyclerviewVersion = "1.3.2"
+roomCompiler = "2.6.1"
 runner = "1.6.2"
 runnerVersion = "1.5.2"
 annotationJvm = "1.9.1"
@@ -33,6 +34,9 @@ androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "card
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-espresso-core-v361 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerviewVersion" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompiler" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompiler" }
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-runner-v152 = { module = "androidx.test:runner", version.ref = "runnerVersion" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
