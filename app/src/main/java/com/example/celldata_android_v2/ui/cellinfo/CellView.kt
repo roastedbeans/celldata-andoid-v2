@@ -11,8 +11,11 @@ import android.util.Log
 import android.widget.LinearLayout
 import cz.mroczis.netmonster.core.model.cell.*
 import cz.mroczis.netmonster.core.model.signal.SignalCdma
+import cz.mroczis.netmonster.core.model.signal.SignalGsm
 import cz.mroczis.netmonster.core.model.signal.SignalLte
 import cz.mroczis.netmonster.core.model.signal.SignalNr
+import cz.mroczis.netmonster.core.model.signal.SignalTdscdma
+import cz.mroczis.netmonster.core.model.signal.SignalWcdma
 
 class CellView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -27,11 +30,12 @@ class CellView @JvmOverloads constructor(
     private val transformer = object : ICellProcessor<Unit> {
 
         override fun processLte(cell: CellLte) {
-            cell.network?.let { addView("NET", "LTE ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "LTE") }
+            addView("Connection Status", cell.connectionStatus.javaClass.simpleName)
+            addView("BandWidth", cell.bandwidth.toString())
             cell.band?.let { band ->
-                band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
+                addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
-
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -44,7 +48,6 @@ class CellView @JvmOverloads constructor(
             cell.aggregatedBands.joinToString { "${it.name} (#${it.number})" }.takeIf { it.isNotEmpty() }?.let {
                 addView("Agg. Bands", it)
             }
-
             cell.timestamp?.let { addView("Timestamp", it) }
             cell.signal.let { signal ->
                 signal.rssi?.let { addView("RSSI", it) }
@@ -53,85 +56,61 @@ class CellView @JvmOverloads constructor(
                 signal.cqi?.let { addView("CQI", it) }
                 signal.timingAdvance?.let { addView("TA", it) }
                 signal.snr?.let { addView("SNR", it) }
-
-                val signalStrength = signal.rsrp?.let { rsrp ->
-                    when {
-                        rsrp >= -85 -> 4  // Excellent
-                        rsrp >= -95 -> 3  // Good
-                        rsrp >= -105 -> 2 // Fair
-                        rsrp >= -115 -> 1 // Poor
-                        else -> 0         // No signal
-                    }
-                } ?: 0
-
+                val signalStrength = calculateLteSignalStrength(signal)
                 addView("Signal Strength", signalStrength)
             }
         }
 
         override fun processCdma(cell: CellCdma) {
-            addView("SID", cell.sid)
+            cell.network?.let { addView("NET", "CDMA") }
+            addView("Connection Status", cell.connectionStatus.javaClass.simpleName)
+            cell.band?.let { band ->
+                addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
+            }
+            cell.network?.mcc?.let {addView("MCC", it)}
+            cell.network?.mnc?.let {addView("MNC", it)}
+            cell.network?.iso?.let {addView("ISO", it)}
             cell.nid?.let { addView("NID", it) }
             cell.bid?.let { addView("BID", it) }
             cell.lat?.let { addView("LAT", it) }
             cell.lon?.let { addView("LON", it) }
-
             cell.signal.let { signal ->
                 signal.cdmaEcio?.let { addView("CD EC/IO", it) }
                 signal.cdmaRssi?.let { addView("CD RSSI", it) }
                 signal.evdoEcio?.let { addView("EV EC/IO", it) }
                 signal.evdoRssi?.let { addView("EV RSSI", it) }
                 signal.evdoSnr?.let { addView("EV SNR", it) }
-
-                val signalStrength = signal.cdmaRssi?.let { rssi ->
-                    when {
-                        rssi >= -75 -> 4  // Excellent
-                        rssi >= -85 -> 3  // Good
-                        rssi >= -95 -> 2  // Fair
-                        rssi >= -100 -> 1 // Poor
-                        else -> 0         // No signal
-                    }
-                } ?: 0
-
+                val signalStrength = calculateCdmaSignalStrength(signal)
                 addView("Signal Strength", signalStrength)
             }
         }
 
         override fun processGsm(cell: CellGsm) {
-            cell.network?.let { addView("NET", "GSM ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "GSM") }
+            addView("Connection Status", cell.connectionStatus.javaClass.simpleName)
             cell.band?.let { band ->
-                band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
+                addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
-
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
             cell.cid?.let { addView("CID", it) }
             cell.lac?.let { addView("LAC", it) }
             cell.bsic?.let { addView("BSIC", it) }
-
             cell.signal.let { signal ->
                 signal.rssi?.let { addView("RSSI", it) }
                 signal.bitErrorRate?.let { addView("BER", it) }
                 signal.timingAdvance?.let { addView("TA", it) }
-
-                val signalStrength = signal.rssi?.let { rssi ->
-                    when {
-                        rssi >= -70 -> 4  // Excellent
-                        rssi >= -85 -> 3  // Good
-                        rssi >= -100 -> 2 // Fair
-                        rssi >= -110 -> 1 // Poor
-                        else -> 0         // No signal
-                    }
-                } ?: 0
-
+                val signalStrength = calculateGsmSignalStrength(signal)
                 addView("Signal Strength", signalStrength)
             }
         }
 
         override fun processNr(cell: CellNr) {
-            cell.network?.let { addView("NET", "NR ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "5G NR") }
+            addView("Connection Status", cell.connectionStatus.javaClass.simpleName)
             cell.band?.let { band ->
-                band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
+                addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
@@ -146,26 +125,17 @@ class CellView @JvmOverloads constructor(
                 signal.ssRsrp?.let { addView("SS RSRP", it) }
                 signal.ssRsrq?.let { addView("SS RSRQ", it) }
                 signal.ssSinr?.let { addView("SS SINR", it) }
-                val signalStrength = signal.ssRsrp?.let { ssRsrp ->
-                    when {
-                        ssRsrp >= -80 -> 4  // Excellent
-                        ssRsrp >= -90 -> 3  // Good
-                        ssRsrp >= -100 -> 2 // Fair
-                        ssRsrp >= -110 -> 1 // Poor
-                        else -> 0           // No signal
-                    }
-                } ?: 0
-
+                val signalStrength = calculateNrSignalStrength(signal)
                 addView("Signal Strength", signalStrength)
             }
         }
 
         override fun processTdscdma(cell: CellTdscdma) {
-            cell.network?.let { addView("NET", "TDS-CDMA ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "TDS-CDMA") }
+            addView("Connection Status", cell.connectionStatus.javaClass.simpleName)
             cell.band?.let { band ->
-                band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
+                addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
-
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -174,32 +144,21 @@ class CellView @JvmOverloads constructor(
             cell.cid?.let { addView("CID", it) }
             cell.lac?.let { addView("LAC", it) }
             cell.cpid?.let { addView("CPID", it) }
-
             cell.signal.let { signal ->
                 signal.rssi?.let { addView("RSSI", it) }
                 signal.bitErrorRate?.let { addView("BER", it) }
                 signal.rscp?.let { addView("RSCP", it) }
-
-                val signalStrength = signal.rssi?.let { rssi ->
-                    when {
-                        rssi >= -70 -> 4  // Excellent
-                        rssi >= -85 -> 3  // Good
-                        rssi >= -100 -> 2 // Fair
-                        rssi >= -110 -> 1 // Poor
-                        else -> 0         // No signal
-                    }
-                } ?: 0
-
+                val signalStrength = calculateTdscdmaSignalStrength(signal)
                 addView("Signal Strength", signalStrength)
             }
         }
 
         override fun processWcdma(cell: CellWcdma) {
-            cell.network?.let { addView("NET", "WCDMA ${cell.connectionStatus.javaClass.simpleName}") }
+            cell.network?.let { addView("NET", "WCDMA") }
+            addView("Connection Status", cell.connectionStatus.javaClass.simpleName)
             cell.band?.let { band ->
-                band.channelNumber.let { addView("FREQ", "$it (#${band.number}, ${band.name})") }
+                addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
-
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -208,25 +167,13 @@ class CellView @JvmOverloads constructor(
             cell.cid?.let { addView("CID", it) }
             cell.lac?.let { addView("LAC", it) }
             cell.psc?.let { addView("PSC", it) }
-
-
             cell.signal.let { signal ->
                 signal.rssi?.let { addView("RSSI", it) }
                 signal.bitErrorRate?.let { addView("BER", it) }
                 signal.rscp?.let { addView("RSCP", it) }
                 signal.ecio?.let { addView("ECIO", it) }
                 signal.ecno?.let { addView("ECNO", it) }
-
-                val signalStrength = signal.rscp?.let { rscp ->
-                    when {
-                        rscp >= -75 -> 4  // Excellent
-                        rscp >= -85 -> 3  // Good
-                        rscp >= -95 -> 2  // Fair
-                        rscp >= -105 -> 1 // Poor
-                        else -> 0         // No signal
-                    }
-                } ?: 0
-
+                val signalStrength = calculateWcdmaSignalStrength(signal)
                 addView("Signal Strength", signalStrength)
             }
         }
@@ -244,8 +191,6 @@ class CellView @JvmOverloads constructor(
         CoroutineScope(Dispatchers.IO).launch {
             dao.insertCellInfo(cellInfoEntity)
         }
-
-//        Log.d("CellInfoEntity", "${cellInfoEntity}")
     }
 
     private fun mapToCellInfoEntity(cell: ICell): CellInfoEntity {
@@ -257,8 +202,12 @@ class CellView @JvmOverloads constructor(
                 val band = cell.band
 
                 CellInfoEntity(
-                    net = "LTE ${cell.connectionStatus.javaClass.simpleName.orEmpty()}",
+                    net = "LTE",
+                    connectionStatus =  cell.connectionStatus.javaClass.simpleName.orEmpty(),
+                    signalStrength = calculateLteSignalStrength(signal),
+                    timestamp = cell.timestamp.toString(),
                     frequency = band?.downlinkEarfcn?.toString().orEmpty(),
+                    bandWidth = cell.bandwidth.toString(),
                     mcc = network?.mcc.orEmpty(),
                     mnc = network?.mnc.orEmpty(),
                     iso = network?.iso.orEmpty(),
@@ -267,12 +216,16 @@ class CellView @JvmOverloads constructor(
                     cid = cell.cid.toString(),
                     tac = cell.tac.toString(),
                     pci = cell.pci.toString(),
-                    timestamp = cell.timestamp.toString(),
                     rssi = signal.rssi?.toString().orEmpty(),
                     rsrp = signal.rsrp?.toString().orEmpty(),
+                    sinr = signal.snr?.toString().orEmpty(),
                     rsrq = signal.rsrq?.toString().orEmpty(),
-                    snr = signal.snr?.toString().orEmpty(),
-                    signalStrength = calculateLteSignalStrength(signal)
+                    ssRsrp = "N/A",
+                    ssRsrq = "N/A",
+                    ssSinr = "N/A",
+                    csiRsrp = "N/A",
+                    csiRsrq = "N/A",
+                    csiSinr = "N/A",
                 )
             }
 
@@ -282,8 +235,12 @@ class CellView @JvmOverloads constructor(
                 val band = cell.band
 
                 CellInfoEntity(
-                    net = "NR ${cell.connectionStatus.javaClass.simpleName.orEmpty()}",
-                    frequency = "N/A",
+                    net = "5G NR",
+                    connectionStatus = cell.connectionStatus.javaClass.simpleName.orEmpty(),
+                    signalStrength = calculateNrSignalStrength(signal),
+                    timestamp = cell.timestamp.toString(),
+                    frequency = band?.downlinkFrequency?.toString().orEmpty(),
+                    bandWidth = estimateBandwidthFromArfcn(band?.downlinkArfcn),
                     mcc = network?.mcc.orEmpty(),
                     mnc = network?.mnc.orEmpty(),
                     iso = network?.iso.orEmpty(),
@@ -292,42 +249,158 @@ class CellView @JvmOverloads constructor(
                     cid = "N/A",
                     tac = cell.tac.toString(),
                     pci = cell.pci.toString(),
-                    timestamp = cell.timestamp.toString(),
+                    rsrp = "N/A",
+                    rsrq = "N/A",
+                    sinr = "N/A",
                     rssi = "N/A",
-                    rsrp = signal.ssRsrp.toString(),
-                    rsrq = signal.ssRsrq.toString(),
-                    snr = "N/A",
-                    signalStrength = calculateNrSignalStrength(signal)
+                    ssRsrp = cell.signal.ssRsrp.toString(),
+                    ssRsrq = cell.signal.ssRsrq.toString(),
+                    ssSinr = cell.signal.ssSinr.toString(),
+                    csiRsrp = cell.signal.csiRsrp.toString(),
+                    csiRsrq = cell.signal.csiRsrq.toString(),
+                    csiSinr = cell.signal.csiSinr.toString(),
                 )
             }
 
             is CellCdma -> {
                 val signal = cell.signal
                 val network = cell.network
+                val band = cell.band
 
                 CellInfoEntity(
-                    net = "CDMA ${cell.connectionStatus.javaClass.simpleName.orEmpty()}",
+                    net = "CDMA",
+                    connectionStatus = cell.connectionStatus.javaClass.simpleName.orEmpty(),
                     frequency = "N/A",
+                    bandWidth = "N/A",
                     mcc = network?.mcc.orEmpty(),
                     mnc = network?.mnc.orEmpty(),
                     iso = network?.iso.orEmpty(),
-                    eci = cell.sid.toString(),
+                    eci = "N/A",
                     eNb = "N/A",
                     cid = "N/A",
                     tac = "N/A",
                     pci = "N/A",
                     timestamp = cell.timestamp.toString(),
+                    signalStrength = calculateCdmaSignalStrength(signal),
                     rssi = signal.cdmaRssi?.toString().orEmpty(),
                     rsrp = "N/A",
                     rsrq = "N/A",
-                    snr = signal.evdoSnr?.toString().orEmpty(),
-                    signalStrength = calculateCdmaSignalStrength(signal)
+                    sinr = signal.evdoSnr?.toString().orEmpty(),
+                    ssRsrp = "N/A",
+                    ssRsrq = "N/A",
+                    ssSinr = "N/A",
+                    csiRsrp = "N/A",
+                    csiRsrq = "N/A",
+                    csiSinr = "N/A",
+                )
+            }
+
+            is CellWcdma -> {
+                val signal = cell.signal
+                val network = cell.network
+                val band = cell.band
+
+                CellInfoEntity(
+                    net = "WCDMA",
+                    connectionStatus = cell.connectionStatus.javaClass.simpleName.orEmpty(),
+                    frequency = "N/A",
+                    bandWidth = "N/A",
+                    mcc = network?.mcc.orEmpty(),
+                    mnc = network?.mnc.orEmpty(),
+                    iso = network?.iso.orEmpty(),
+                    eci = "N/A",
+                    eNb = "N/A",
+                    cid = "N/A",
+                    tac = "N/A",
+                    pci = "N/A",
+                    timestamp = cell.timestamp.toString(),
+                    signalStrength = calculateWcdmaSignalStrength(signal),
+                    rssi = signal.rssi?.toString().orEmpty(),
+                    rsrp = "N/A",
+                    rsrq = "N/A",
+                    sinr = "N/A",
+                    ssRsrp = "N/A",
+                    ssRsrq = "N/A",
+                    ssSinr = "N/A",
+                    csiRsrp = "N/A",
+                    csiRsrq = "N/A",
+                    csiSinr = "N/A",
+                )
+            }
+
+            is CellTdscdma -> {
+                val signal = cell.signal
+                val network = cell.network
+                val band = cell.band
+
+                CellInfoEntity(
+                    net = "TDS-CDMA",
+                    connectionStatus =  cell.connectionStatus.javaClass.simpleName.orEmpty(),
+                    frequency = "N/A",
+                    bandWidth = "N/A",
+                    mcc = network?.mcc.orEmpty(),
+                    mnc = network?.mnc.orEmpty(),
+                    iso = network?.iso.orEmpty(),
+                    eci = "N/A",
+                    eNb = "N/A",
+                    cid = "N/A",
+                    tac = "N/A",
+                    pci = "N/A",
+                    timestamp = cell.timestamp.toString(),
+                    signalStrength = calculateTdscdmaSignalStrength(signal),
+                    rssi = signal.rssi?.toString().orEmpty(),
+                    rsrp = "N/A",
+                    rsrq = "N/A",
+                    sinr = "N/A",
+                    ssRsrp = "N/A",
+                    ssRsrq = "N/A",
+                    ssSinr = "N/A",
+                    csiRsrp = "N/A",
+                    csiRsrq = "N/A",
+                    csiSinr = "N/A",
+                )
+            }
+
+            is CellGsm -> {
+                val signal = cell.signal
+                val network = cell.network
+                val band = cell.band
+
+                CellInfoEntity(
+                    net = "GSM",
+                    connectionStatus =  cell.connectionStatus.javaClass.simpleName.orEmpty(),
+                    frequency = "N/A",
+                    bandWidth = "N/A",
+                    mcc = network?.mcc.orEmpty(),
+                    mnc = network?.mnc.orEmpty(),
+                    iso = network?.iso.orEmpty(),
+                    eci = "N/A",
+                    eNb = "N/A",
+                    cid = "N/A",
+                    tac = "N/A",
+                    pci = "N/A",
+                    timestamp = cell.timestamp.toString(),
+                    signalStrength = calculateGsmSignalStrength(signal),
+                    rssi = signal.rssi?.toString().orEmpty(),
+                    rsrp = "N/A",
+                    rsrq = "N/A",
+                    sinr = "N/A",
+                    ssRsrp = "N/A",
+                    ssRsrq = "N/A",
+                    ssSinr = "N/A",
+                    csiRsrp = "N/A",
+                    csiRsrq = "N/A",
+                    csiSinr = "N/A",
                 )
             }
 
             else -> CellInfoEntity(
                 net = "Unknown",
-                frequency = "Unknown",
+                connectionStatus = "",
+                signalStrength = "",
+                timestamp = "",
+                frequency = "",
+                bandWidth = "",
                 mcc = "",
                 mnc = "",
                 iso = "",
@@ -336,42 +409,47 @@ class CellView @JvmOverloads constructor(
                 cid = "",
                 tac = "",
                 pci = "",
-                timestamp = "",
                 rssi = "",
                 rsrp = "",
                 rsrq = "",
-                snr = "",
-                signalStrength = "No signal"
+                sinr = "",
+                ssRsrp = "",
+                ssRsrq = "",
+                ssSinr = "",
+                csiRsrp = "",
+                csiRsrq = "",
+                csiSinr = ""
             )
         }
     }
 
-    private fun calculateLteSignalStrength(signal: SignalLte): String {
-        return (signal.rsrp?.let { rsrp ->
-            when {
-                rsrp >= -85 -> 4
-                rsrp >= -95 -> 3
-                rsrp >= -105 -> 2
-                rsrp >= -115 -> 1
-                else -> 0
+    private fun estimateBandwidthFromArfcn(downlinkArfcn: Int?): String {
+        return if (downlinkArfcn == null) {
+            "N/A"
+        } else {
+            when (downlinkArfcn) {
+                in 151600..160600 -> "100 MHz (n78, 3.5 GHz)"
+                in 173800..178800 -> "50 MHz (n79, 4.8 GHz)"
+                in 422000..434000 -> "200 MHz (n260, 39 GHz)"
+                else -> "Unknown Bandwidth"
             }
-        } ?: "No signal").toString()
+        }
     }
 
-    private fun calculateCdmaSignalStrength(signal: SignalCdma): String {
-        return (signal.cdmaRssi?.let { rssi ->
+    private fun calculateLteSignalStrength(signal: SignalLte?): String {
+        return (signal?.rsrp?.let { rsrp ->
             when {
-                rssi >= -75 -> 4
-                rssi >= -85 -> 3
-                rssi >= -95 -> 2
-                rssi >= -100 -> 1
-                else -> 0
+                rsrp >= -80 -> 4  // Excellent
+                rsrp >= -90 -> 3  // Good
+                rsrp >= -100 -> 2 // Fair
+                rsrp >= -110 -> 1 // Poor
+                else -> 0           // No signal
             }
-        } ?: "No signal").toString()
+        } ?: 0).toString()
     }
 
-    private fun calculateNrSignalStrength(signal: SignalNr): String {
-        return (signal.ssRsrp?.let { ssRsrp ->
+    private fun calculateNrSignalStrength(signal: SignalNr?): String {
+        return (signal?.ssRsrp?.let { ssRsrp ->
             when {
                 ssRsrp >= -80 -> 4  // Excellent
                 ssRsrp >= -90 -> 3  // Good
@@ -379,15 +457,61 @@ class CellView @JvmOverloads constructor(
                 ssRsrp >= -110 -> 1 // Poor
                 else -> 0           // No signal
             }
-        } ?: "No signal").toString()
+        } ?: 0).toString()
     }
 
+    private fun calculateCdmaSignalStrength(signal: SignalCdma?): String {
+        return (signal?.cdmaRssi?.let { rssi ->
+            when {
+                rssi >= -75 -> 4
+                rssi >= -85 -> 3
+                rssi >= -95 -> 2
+                rssi >= -100 -> 1
+                else -> 0
+            }
+        } ?: 0).toString()
+    }
+
+    private fun calculateWcdmaSignalStrength(signal: SignalWcdma?): String {
+        return (signal?.rssi?.let { rssi ->
+            when {
+                rssi >= -75 -> 4
+                rssi >= -85 -> 3
+                rssi >= -95 -> 2
+                rssi >= -100 -> 1
+                else -> 0
+            }
+        } ?: 0).toString()
+    }
+
+    private fun calculateTdscdmaSignalStrength(signal: SignalTdscdma?): String {
+        return (signal?.rssi?.let { rssi ->
+            when {
+                rssi >= -75 -> 4
+                rssi >= -85 -> 3
+                rssi >= -95 -> 2
+                rssi >= -100 -> 1
+                else -> 0
+            }
+        } ?: 0).toString()
+    }
+
+    private fun calculateGsmSignalStrength(signal: SignalGsm?): String {
+        return (signal?.rssi?.let { rssi ->
+            when {
+                rssi >= -75 -> 4
+                rssi >= -85 -> 3
+                rssi >= -95 -> 2
+                rssi >= -100 -> 1
+                else -> 0
+            }
+        } ?: 0).toString()
+    }
 
     private fun addView(title: String, message: Any) {
         val view = CellItemSimple(context).apply {
             bind(title, message.toString())
         }
-
         addView(view)
     }
 }

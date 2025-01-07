@@ -4,17 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Delete Button -->
-    <Button
-        android:id="@+id/deleteDataButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:padding="8dp"
-        android:text="Delete Old Data"
-        android:backgroundTint="#FF5252"
-        android:textColor="#FFFFFF"
-        android:layout_gravity="center" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:gravity="center">
+        <!-- Delete Button -->
+        <Button
+            android:id="@+id/deleteDataButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:text="Delete Old Data"
+            android:backgroundTint="#2E2E2E"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center" />
+        <!-- Export Button -->
+        <Button
+            android:id="@+id/exportDataButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:text="Export Data"
+            android:backgroundTint="#7655B3"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
 
     <!-- Scrollable Table -->
     <ScrollView
@@ -39,82 +55,122 @@
                     <TextView
                         android:text="Net"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
-                        android:text="Frequency"
+                        android:text="Conn Status"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
-                        android:text="MCC"
+                        android:text="Sig Str"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
-                        android:padding="8dp"/>
-                    <TextView
-                        android:text="MNC"
-                        android:layout_margin="4dp"
-                        android:background="#FFCCCC"
-                        android:padding="8dp"/>
-                    <TextView
-                        android:text="ISO"
-                        android:layout_margin="4dp"
-                        android:background="#FFCCCC"
-                        android:padding="8dp"/>
-                    <TextView
-                        android:text="ECI"
-                        android:layout_margin="4dp"
-                        android:background="#FFCCCC"
-                        android:padding="8dp"/>
-                    <TextView
-                        android:text="eNB"
-                        android:layout_margin="4dp"
-                        android:background="#FFCCCC"
-                        android:padding="8dp"/>
-                    <TextView
-                        android:text="CID"
-                        android:layout_margin="4dp"
-                        android:background="#FFCCCC"
-                        android:padding="8dp"/>
-                    <TextView
-                        android:text="TAC"
-                        android:layout_margin="4dp"
-                        android:background="#FFCCCC"
-                        android:padding="8dp"/>
-                    <TextView
-                        android:text="PCI"
-                        android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
                         android:text="Timestamp"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="Freq"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="BandWidth"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="MCC"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="MNC"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="ISO"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="ECI"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="eNB"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="CID"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="TAC"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="PCI"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
                         android:text="RSSI"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
                         android:text="RSRP"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
                         android:text="RSRQ"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
-                        android:text="SNR"
+                        android:text="SINR"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
-                        android:text="Signal Strength"
+                        android:text="SSRSRP"
                         android:layout_margin="4dp"
-                        android:background="#FFCCCC"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="SSRSRQ"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="SSSINR"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="CSIRSRP"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="CSIRSRQ"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:text="CSISINR"
+                        android:layout_margin="4dp"
+                        android:background="#D1C4E9"
                         android:padding="8dp"/>
                 </TableRow>
             </TableLayout>

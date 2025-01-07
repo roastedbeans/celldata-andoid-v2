@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             requestPermissions(arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.READ_PHONE_STATE
+                Manifest.permission.READ_PHONE_STATE,
             ), PERMISSION_REQUEST_CODE)
         } else if (hasRequiredPermissions()) {
             // If permissions are already granted, notify the current fragment
