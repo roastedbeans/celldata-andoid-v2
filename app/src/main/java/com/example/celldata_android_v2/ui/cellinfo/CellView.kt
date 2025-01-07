@@ -36,6 +36,7 @@ class CellView @JvmOverloads constructor(
             cell.band?.let { band ->
                 addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
+            cell.timestamp?.let { addView("Timestamp", it) }
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -48,7 +49,6 @@ class CellView @JvmOverloads constructor(
             cell.aggregatedBands.joinToString { "${it.name} (#${it.number})" }.takeIf { it.isNotEmpty() }?.let {
                 addView("Agg. Bands", it)
             }
-            cell.timestamp?.let { addView("Timestamp", it) }
             cell.signal.let { signal ->
                 signal.rssi?.let { addView("RSSI", it) }
                 signal.rsrp?.let { addView("RSRP", it) }
@@ -67,6 +67,7 @@ class CellView @JvmOverloads constructor(
             cell.band?.let { band ->
                 addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
+            cell.timestamp?.let { addView("Timestamp", it) }
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -91,6 +92,7 @@ class CellView @JvmOverloads constructor(
             cell.band?.let { band ->
                 addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
+            cell.timestamp?.let { addView("Timestamp", it) }
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -112,6 +114,7 @@ class CellView @JvmOverloads constructor(
             cell.band?.let { band ->
                 addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
+            cell.timestamp?.let { addView("Timestamp", it) }
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -136,6 +139,7 @@ class CellView @JvmOverloads constructor(
             cell.band?.let { band ->
                 addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
+            cell.timestamp?.let { addView("Timestamp", it) }
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
@@ -159,6 +163,7 @@ class CellView @JvmOverloads constructor(
             cell.band?.let { band ->
                 addView("FREQUENCY", "${band.channelNumber} (#${band.number}, ${band.name})")
             }
+            cell.timestamp?.let { addView("Timestamp", it) }
             cell.network?.mcc?.let {addView("MCC", it)}
             cell.network?.mnc?.let {addView("MNC", it)}
             cell.network?.iso?.let {addView("ISO", it)}
