@@ -1,172 +1,77 @@
-# NetMonster Core - Documentation
+# Cell Tower Information Collection
 
-Lightweight And**r**oid library that is build over [Telephony SDK](https://developer.android.com/reference/android/telephony/package-summary). NetMonster core is extracted from [NetMonster](https://play.google.com/store/apps/details?id=cz.mroczis.netmonster) application and backports several Telephony features to older Android devices.
+This project is an Android application developed in Android Studio to collect and analyze cell tower information for networks such as LTE, 5G, and other technologies. The application focuses on gathering data to identify potential fake base stations and to provide insights into mobile network performance.
 
-Why use NetMonster Core instead of legacy API?
-- Validation - library validates data from RIL and corrects them if possible
-- Richer information - additional functions for cell identity and cell signal that will make your code more understandable
-- Backport - several non-accessible signal or identity fields are now accessible without boilerplate code
-- Tested - tested on real devices, 50 000+ active users
+## Features
+- Collects cell tower information for LTE, 5G, and other supported networks.
+- Provides detailed signal metrics such as signal strength, frequency, and bandwidth.
+- Supports analysis of collected data for identifying anomalies.
+- User-friendly interface for real-time monitoring and data collection.
 
-![Latest version](https://img.shields.io/maven-central/v/app.netmonster/core "Latest lib version")
-```groovy
-implementation 'app.netmonster:core:$version'
-```
+## Prerequisites
+- **Android Studio**: Latest version
+- **Kotlin**: Project uses Kotlin as the primary language.
+- **Android Device**: A device running Android 8.0 (Oreo) or later with cellular connectivity.
+- **Permissions**: Ensure the app has the following permissions:
+  - ACCESS_FINE_LOCATION
+  - ACCESS_COARSE_LOCATION
+  - READ_PHONE_STATE
 
-### New functions
-Here's small comparison for each of voice / data network you can meet.
+## Setup and Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
+2. Open the project in Android Studio.
+3. Sync the project to download dependencies.
+4. Build and run the app on a physical Android device (emulators may not support cellular data collection).
 
-#### GSM
-|function    |Min SDK Android|Min SDK NetMonster Core |
-|------------|---------------|------------------------|
-|CGI         |-              |I (14)                  |
-|NCC         |-              |N (24)                  |
-|BCC         |-              |N (24)                  |
-|Band        |-              |N (24)                  |
-|TA          |O (26)         |N (24)                  |
+## Network Information Collected
+The app collects the following network metrics:
 
-#### WCDMA
-|function    |Min SDK Android|Min SDK NetMonster Core |  
-|------------|---------------|------------------------|
-|CGI         |-              |I (14)                  |
-|CID (16b)   |-              |I (14)                  |  
-|RNC         |-              |I (14)                  |
-|Ec/Io       |-              |M (23)                  |  
-|Band        |-              |N (24)                  |  
-|BER         |-              |Q (29)                  |  
-|Ec/No       |-              |Q (29)                  |  
-|RSCP        |-              |Q (29)                  |
+| **Network Type** | **Parameter**              | **Description**                                         |
+|-------------------|----------------------------|---------------------------------------------------------|
+| **LTE**          | RSRP (Reference Signal Received Power) | Measures signal strength.                            |
+|                   | RSRQ (Reference Signal Received Quality) | Measures signal quality.                             |
+|                   | SINR (Signal-to-Interference-plus-Noise Ratio) | Measures signal-to-noise ratio.                     |
+|                   | Frequency                  | Operating frequency of the cell tower.                 |
+|                   | Bandwidth                  | Available bandwidth of the cell tower.                 |
+| **5G**           | NR-ARFCN (New Radio Absolute Radio Frequency Channel Number) | Identifies the frequency used. |
+|                   | SS-RSRP (Reference Signal Received Power) | Measures signal strength for 5G.                   |
+|                   | SS-SINR (Signal-to-Interference-plus-Noise Ratio) | Measures signal quality.                           |
+|                   | PCI (Physical Cell ID)     | Identifies the cell tower.                             |
+| **General**       | MCC (Mobile Country Code)  | Identifies the country of the network.                 |
+|                   | MNC (Mobile Network Code)  | Identifies the network operator.                       |
+|                   | Cell ID                    | Unique identifier for the cell tower.                  |
+|                   | Signal Strength            | Overall signal strength reported by the device.        |
 
-#### LTE
-|function    |Min SDK Android|Min SDK NetMonster Core |
-|------------|---------------|------------------------|
-|eCGI        |-              |I (14)                  |
-|CID (8b)    |-              |I (14)                  |
-|eNb         |-              |I (14)                  | 
-|RSSI        |Q (29)         |I (14)                  |
-|RSRP        |O (26)         |I (14)                  |
-|CQI         |O (26)         |I (14)                  |
-|SNR         |O (26)         |I (14)                  |
-|TA          |O (26)         |I (14)                  |
-|Band        |-              |N (24)                  |  
+## How It Works
+1. The app uses Android's Telephony APIs and permissions to collect cell tower information.
+2. The data is processed and displayed in a user-friendly interface.
+3. Users can export collected data for offline analysis.
 
+## Usage
+1. Launch the app on an Android device.
+2. Grant the necessary permissions.
+3. Navigate to the "Live Data" tab to monitor real-time cell tower information.
+4. Use the "Export Data" feature to save collected information for further analysis.
 
-### Usage
+## Contributing
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes and push the branch:
+   ```bash
+   git push origin feature-name
+   ```
+4. Submit a pull request.
 
-There are basically two ways you can use this library - as a validation library that will sanitize
-data from AOSP cause lots of manufacturers modify source code and do not follow public documentation.
-In that case you'll only need `ITelephonyManagerCompat` to retrieve AOSP-like models that are properly
-validated.
+## License
+This project is licensed under the [MIT License](LICENSE).
 
-The second option is to use advantages of additional postprocessing of NetMonster Core. As a result
-you'll get more data but correctness is not 100 % guaranteed.
+---
 
-#### Without additional postprocessing
+For any issues or feature requests, please open an issue in the repository or contact the project maintainers.
 
-NetMonster Core focuses on mapping of two AOSP's ways to fetch current cell information:
-- [TelephonyManager.getAllCellInfo()](https://developer.android.com/reference/android/telephony/TelephonyManager#getAllCellInfo())
-- [TelephonyManager.getCellLocation()](https://developer.android.com/reference/android/telephony/TelephonyManager.html#getCellLocation()) (deprecated in AOSP)
-- TelephonyManager.getNeighbouringCellInfo() (removed from AOSP)
-
-Note that some of those methods are deprecated or even removed from AOSP - for more info see documentation of each method.
-
-```kotlin
-NetMonsterFactory.getTelephony(context, SUBSCRIPTION_ID).apply {
-    val allCellInfo : List<ICell> = getAllCellInfo() 
-    val cellLocation : List<ICell> = getCellLocation()
-    val neighbouringCells : List<ICell> = getNeighbouringCellInfo()
-}
-```
-
-#### Postprocessing
-
-In this case you'll need to interact with `INetMonster` class. Here's list of problems
-that this library solves.
-
-##### Merging data from multiple sources
-Issue:
-- Android offers multiple ways how to get cell information.
-- Not all devices support one unified way how to access all the data.
-
-Solution:
-- NetMonster Core grabs data from sources you specify, validates and merges them.
-
-```kotlin
-NetMonsterFactory.get(context).apply {
-    val allSources : List<ICell> = getCells() // all sources
-    val subset : List<ICell> = getCells( // subset of available sources
-        CellSource.ALL_CELL_INFO, 
-        CellSource.CELL_LOCATION
-    ) 
-}
-```
-
-##### Detection of LTE-A & HSPA+42
-Issue:
-- AOSP cannot detect HSPA+42, only HSPA+.
-- AOSP does not offer a way to distinguish whether current network is using carrier aggregation or not.
-
-Solution:
-- NetMonster Core attempts to guess HSPA+ 42 availability.
-- LTE-CA presence can be guessed based on cell info or detected using hidden APIs.
-
-Using `getNetworkType(vararg detectors: INetworkDetector)` you can specify which `INetworkDetector` to use
-when detecting current network type.
-
-```kotlin
-NetMonsterFactory.get(context).apply {
-    // All detectors that are bundled in NetMonster Core
-    val networkType : NetworkType = getNetworkType(SUBSCRIPTION_ID)
-    
-    // Only HSPA+42 (guess, not from RIL)
-    val isHspaDc: NetworkType? = getNetworkType(SUBSCRIPTION_ID, DetectorHspaDc())
-    // LTE-A from CellInfo (guess, not from RIL), NSA NR
-    val isLteCaCellInfo: NetworkType? = getNetworkType(SUBSCRIPTION_ID, DetectorCellInfo())
-    // LTE-A from ServiceState (from RIL, Android P+)
-    val isLteCaServiceState: NetworkType? = getNetworkType(SUBSCRIPTION_ID, DetectorLteAdvancedNrServiceState())
-    // LTE-A from PhysicalChannel (from RIL, Android P+)
-    val isLteCaPhysicalChannel: NetworkType? = getNetworkType(SUBSCRIPTION_ID, DetectorLteAdvancedPhysicalChannel())
-    // LTE-A and NR from DisplayInfo (marketing purposes, might result false-positive data, Android R+)
-    // You can also detect only LTE-A or NR using one of classes:
-    // - DetectorLteAdvancedServiceState ... for LTE-A
-    // - DetectorNsaNr ... for NR NSA
-    val isLteCaOrNsaNrDisplayInfo: NetworkType? = getNetworkType(SUBSCRIPTION_ID, DetectorLteAdvancedNrDisplayInfo())
-}
-```
-
-##### Detection of NR NSA
-Issue:
-- AOSP does not provide any information about NR NSA connection status.
-- The only official available information is in `TelephonyDisplayInfo` which provide inaccurate (marketing-based) data.
-
-Solution:
-- In order to obtain detailed connection info about NR NSA you need to get `NetworkType` instance.
-```kotlin
-val networkType : NetworkType = NetMonsterFactory.get(context).getNetworkType(SUBSCRIPTION_ID)
-if (networkType is NetworkType.Nr.Nsa) {
-    val state: NrNsaState = networkType.nrNsaState // For more info refer to NrNsaState class
-}
-```
-
-##### Other features
-- Detection of serving cells in 'emergency calls only' mode.
-- PLMN addition to non-serving cells in GSM, WCDMA, LTE, TD-SCDMA and NR networks.
-
-License
--------
-
-    Copyright 2019 Michal Mroček
-    
-    Licensed under the Apache License, Version 2.0 (the "License");
-
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
