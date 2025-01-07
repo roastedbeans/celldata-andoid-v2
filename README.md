@@ -16,6 +16,8 @@ This project is an Android application developed in Android Studio to collect an
   - ACCESS_FINE_LOCATION
   - ACCESS_COARSE_LOCATION
   - READ_PHONE_STATE
+  - WRITE_EXTERNAL_STORAGE
+  - READ_EXTERNAL_STORAGE
 
 ## Setup and Installation
 1. Clone the repository:
@@ -54,9 +56,9 @@ The app collects the following network metrics:
 1. Launch the app on an Android device.
 2. Grant the necessary permissions.
 3. Navigate to the "Cell Info" tab to monitor real-time cell tower information.
-4. Navigate to "Cell Logger" tab to monitor cell tower information in table format. (Pending feature)
-5. [Cell Logger] Use "DELETE OLD DATA" to reset all the cell tower information. (Pending feature)
-6. [Cell Logger] Use the "Export Data" feature to save collected information for further analysis. (Pending feature)
+4. Navigate to "Cell Logger" tab to monitor cell tower information in table format.
+5. [Cell Logger] Use "DELETE OLD DATA" to reset all the cell tower information.
+6. [Cell Logger] Use the "Export Data" feature to save collected information for further analysis.
 
 ## Contributing
 1. Fork the repository.
@@ -71,7 +73,7 @@ The app collects the following network metrics:
 4. Submit a pull request.
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the ____.
 
 ---
 
