@@ -53,8 +53,10 @@ The app collects the following network metrics:
 ## Usage
 1. Launch the app on an Android device.
 2. Grant the necessary permissions.
-3. Navigate to the "Live Data" tab to monitor real-time cell tower information.
-4. Use the "Export Data" feature to save collected information for further analysis.
+3. Navigate to the "Cell Info" tab to monitor real-time cell tower information.
+4. Navigate to "Cell Logger" tab to monitor cell tower information in table format. (Pending feature)
+5. [Cell Logger] Use "DELETE OLD DATA" to reset all the cell tower information. (Pending feature)
+6. [Cell Logger] Use the "Export Data" feature to save collected information for further analysis. (Pending feature)
 
 ## Contributing
 1. Fork the repository.
