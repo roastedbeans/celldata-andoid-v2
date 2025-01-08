@@ -58,7 +58,7 @@
                         android:background="#D1C4E9"
                         android:padding="8dp"/>
                     <TextView
-                        android:text="Conn Status"
+                        android:text="Connection Status"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
                         android:padding="8dp"/>
