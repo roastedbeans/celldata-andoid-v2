@@ -17,6 +17,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "celldata_android_v2"
+rootProject.name = "NetSense"
 include(":app")
 include(":library")

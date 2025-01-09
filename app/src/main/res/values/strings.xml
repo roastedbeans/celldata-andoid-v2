@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CellData</string>
+    <string name="app_name">NetSense</string>
     <string name="title_cell_info">Cell Info</string>
     <string name="title_cell_logger">Cell Logger</string>
 

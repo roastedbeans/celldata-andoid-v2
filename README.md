@@ -1,4 +1,4 @@
-# Mobile Communication Data Collection and Utilization Applications
+# NetSense: Mobile Communication Data Collection and Utilization Applications
 
 This project is an Android application developed in Android Studio to collect and analyze cell tower information for networks such as LTE, 5G, and other technologies. The application focuses on gathering data to identify potential fake base stations and to provide insights into mobile network performance.
 
