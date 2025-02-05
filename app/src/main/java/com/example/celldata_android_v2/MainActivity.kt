@@ -16,10 +16,43 @@ import com.example.celldata_android_v2.databinding.ActivityMainBinding
 import com.example.celldata_android_v2.ui.cellinfo.CellInfoFragment
 import com.example.celldata_android_v2.ui.celllogger.CellLoggerFragment
 
+/**
+ * MainActivity
+ *
+ * Primary activity for the AirGap research project's Android implementation.
+ * Orchestrates the application's main functionality for cellular network data collection
+ * and analysis, with a focus on 5G network vulnerability research.
+ *
+ * Key Components:
+ * 1. Navigation Management
+ *    - Bottom navigation for switching between data collection modes
+ *    - Fragment container for different visualization screens
+ *
+ * 2. Permission Handling
+ *    - Runtime permission management for sensitive data access
+ *    - Coordination with fragments for permission states
+ *
+ * 3. Window Management
+ *    - System insets handling for proper UI display
+ *    - Layout optimization for different screen sizes
+ */
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * ViewBinding instance for type-safe view access.
+     */
     private lateinit var binding: ActivityMainBinding
 
+    /**
+     * Initializes the activity and sets up core components.
+     *
+     * Setup Process:
+     * 1. Inflates layout using ViewBinding
+     * 2. Configures bottom navigation
+     * 3. Sets up window insets
+     * 4. Loads default fragment
+     * 5. Initiates permission checks
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,6 +70,12 @@ class MainActivity : AppCompatActivity() {
         checkAndRequestPermissions()
     }
 
+    /**
+     * Configures bottom navigation bar functionality.
+     * Manages transitions between different data collection modes:
+     * - Cell Information: Real-time network data display
+     * - Cell Logger: Data logging and analysis tools
+     */
     private fun setupBottomNavigation() {
         binding.navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -52,6 +91,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    /**
+     * Configures window insets for proper UI display.
+     * Handles system bars and ensures correct layout padding.
+     *
+     * Implementation:
+     * - Applies system bar insets
+     * - Updates layout margins
+     * - Adjusts fragment container padding
+     */
 
     private fun setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
@@ -69,12 +117,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Loads specified fragment into the container.
+     * Manages fragment transitions for different data collection modes.
+     *
+     * @param fragment The fragment to be loaded
+     */
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)  // Fixed: Use fragment_container instead of navigation_cell_info
             .commit()
     }
 
+    /**
+     * Manages permission checks and requests for cellular data access.
+     *
+     * Required Permissions:
+     * - ACCESS_COARSE_LOCATION: For cell location data
+     * - ACCESS_FINE_LOCATION: For precise location
+     * - READ_PHONE_STATE: For detailed cell information
+     */
     private fun checkAndRequestPermissions() {
         if (!hasRequiredPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(arrayOf(
@@ -88,6 +150,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Verifies if all required permissions are granted.
+     *
+     * Checks:
+     * - Location permissions
+     * - Phone state access
+     *
+     * @return Boolean indicating if all permissions are granted
+     */
     private fun hasRequiredPermissions(): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -99,10 +170,20 @@ class MainActivity : AppCompatActivity() {
                 ) == PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * Retrieves the current CellInfoFragment if active.
+     * Used for permission-related callbacks.
+     *
+     * @return Current CellInfoFragment instance or null
+     */
     private fun getCurrentCellInfoFragment(): CellInfoFragment? {
         return supportFragmentManager.findFragmentById(R.id.fragment_container) as? CellInfoFragment
     }
 
+    /**
+     * Handles permission request results.
+     * Notifies relevant components about permission changes.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -117,6 +198,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Companion object containing configuration constants.
+     */
     companion object {
         private const val PERMISSION_REQUEST_CODE = 100
     }
