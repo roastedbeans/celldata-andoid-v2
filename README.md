@@ -65,6 +65,10 @@ The app collects the following network metrics:
 4. Navigate to "Cell Logger" tab to monitor cell tower information in table format.
 5. [Cell Logger] Use "DELETE OLD DATA" to reset all the cell tower information.
 6. [Cell Logger] Use the "Export Data" feature to save collected information for further analysis.
+7. 
+
+## V2 Update
+1. Background network information collection
 
 ## Credits
 
