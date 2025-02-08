@@ -222,7 +222,6 @@ class CellView @JvmOverloads constructor(
         }
     }
 
-
     /**
      * bind(cell: ICell)
      * Primary function for processing new cell data.
@@ -260,6 +259,7 @@ class CellView @JvmOverloads constructor(
      */
     private fun saveToDatabase(cellInfoEntity: CellInfoEntity) {
         CoroutineScope(Dispatchers.IO).launch {
+            Log.d("CellView", "Saving to database: $cellInfoEntity")
             dao.insertCellInfo(cellInfoEntity)
         }
     }
@@ -281,7 +281,6 @@ class CellView @JvmOverloads constructor(
      */
 
     private fun mapToCellInfoEntity(cell: ICell): CellInfoEntity {
-        Log.d("Cell", "$cell")
         return when (cell) {
             is CellLte -> {
                 val signal = cell.signal
@@ -666,4 +665,5 @@ class CellView @JvmOverloads constructor(
         }
         addView(view)
     }
+
 }

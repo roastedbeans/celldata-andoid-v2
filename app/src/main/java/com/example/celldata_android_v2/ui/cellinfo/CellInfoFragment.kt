@@ -99,30 +99,10 @@ class CellInfoFragment : Fragment() {
      * Establishes observation of cellular data updates.
      * Updates the RecyclerView adapter when new data arrives.
      */
-    private fun observeCellData() {
+    fun observeCellData() {
         cellInfoViewModel.cellData.observe(viewLifecycleOwner) { cells ->
             adapter.updateData(cells)
         }
-    }
-
-    /**
-     * Verifies required permissions for data collection.
-     *
-     * Required Permissions:
-     * - ACCESS_COARSE_LOCATION: For cell location access
-     * - READ_PHONE_STATE: For detailed cell information
-     *
-     * @return Boolean indicating if all permissions are granted
-     */
-    private fun hasRequiredPermissions(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.READ_PHONE_STATE
-                ) == PackageManager.PERMISSION_GRANTED
     }
 
     /**
@@ -131,9 +111,7 @@ class CellInfoFragment : Fragment() {
      */
     override fun onResume() {
         super.onResume()
-        if (hasRequiredPermissions()) {
-            cellInfoViewModel.startUpdates()
-        }
+        cellInfoViewModel.startUpdates()
     }
 
     /**
@@ -142,9 +120,8 @@ class CellInfoFragment : Fragment() {
      */
     override fun onPause() {
         super.onPause()
-        cellInfoViewModel.stopUpdates()
+        cellInfoViewModel.startUpdates()
     }
-
 
     /**
      * Callback for permission grant events.

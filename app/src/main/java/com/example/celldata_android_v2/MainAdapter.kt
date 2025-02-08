@@ -15,7 +15,12 @@ class MainAdapter : RecyclerView.Adapter<MainVH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MainVH.create(parent)
 
-    override fun onBindViewHolder(holder: MainVH, position: Int) = holder.bind(_data[position])
+    override fun onBindViewHolder(holder: MainVH, position: Int) {
+        val cell = _data[position]
+        holder.bind(cell)
 
+        // Ensure it binds properly
+        holder.itemView.requestLayout()
+    }
     override fun getItemCount() = _data.size
 }

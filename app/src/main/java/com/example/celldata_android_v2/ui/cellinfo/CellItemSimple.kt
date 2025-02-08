@@ -37,15 +37,8 @@ class CellItemSimple @JvmOverloads constructor(
      * ViewBinding instance for accessing layout elements.
      * Uses view_cell_item_simple.xml layout resource.
      */
-    private val binding: ViewCellItemSimpleBinding
-
-    /**
-     * Initializes the view by inflating the layout and setting up initial configurations.
-     * The layout is inflated using ViewBinding for type-safe view access.
-     */
-    init {
-        binding = ViewCellItemSimpleBinding.inflate(LayoutInflater.from(context), this, true)
-    }
+    private val binding: ViewCellItemSimpleBinding =
+        ViewCellItemSimpleBinding.inflate(LayoutInflater.from(context), this, true)
 
     /**
      * Binds data to the view, updating both the title and message text fields.
