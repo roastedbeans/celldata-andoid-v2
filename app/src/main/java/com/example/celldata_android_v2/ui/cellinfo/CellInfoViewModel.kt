@@ -101,8 +101,8 @@ class CellInfoViewModel(application: Application) : AndroidViewModel(application
      * viewModel.stopUpdates()
      */
     fun stopUpdates() {
-        isUpdating = false
-        handler.removeCallbacksAndMessages(null)
+//        isUpdating = false
+//        handler.removeCallbacksAndMessages(null)
     }
 
     /**
@@ -120,7 +120,7 @@ class CellInfoViewModel(application: Application) : AndroidViewModel(application
      * - SecurityException: Permission-related errors
      * - General Exception: Other potential errors
      */
-    private fun updateData() {
+    fun updateData() {
         if (!isUpdating) return
 
         if (hasRequiredPermissions()) {
@@ -142,13 +142,13 @@ class CellInfoViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-     /**
+    /**
      * Lifecycle cleanup method.
      * Ensures proper cleanup when ViewModel is destroyed.
      */
     override fun onCleared() {
-        super.onCleared()
-        stopUpdates()
+//        super.onCleared()
+//        stopUpdates()
     }
 
     /**

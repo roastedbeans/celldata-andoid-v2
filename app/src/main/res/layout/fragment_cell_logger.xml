@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:stretchColumns="*"
                 android:padding="8dp"
-                android:background="#FFFFFF">
+               >
 
                 <!-- Header Row -->
                 <TableRow>
@@ -56,121 +56,145 @@
                         android:text="Net"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="Connection Status"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="Sig Str"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="Timestamp"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="Freq"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="BandWidth"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="MCC"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="MNC"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="ISO"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="ECI"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="eNB"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="CID"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="TAC"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="PCI"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="RSSI"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="RSRP"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="RSRQ"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="SINR"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="SSRSRP"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="SSRSRQ"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="SSSINR"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="CSIRSRP"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="CSIRSRQ"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                     <TextView
                         android:text="CSISINR"
                         android:layout_margin="4dp"
                         android:background="#D1C4E9"
+                        android:textColor="@color/black"
                         android:padding="8dp"/>
                 </TableRow>
             </TableLayout>

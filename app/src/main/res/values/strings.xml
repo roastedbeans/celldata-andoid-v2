@@ -2,5 +2,6 @@
     <string name="app_name">NetSense</string>
     <string name="title_cell_info">Cell Info</string>
     <string name="title_cell_logger">Cell Logger</string>
-
+    <string name="channel_name">NetSense</string>
+    <string name="channel_description">Background cellular data collection service</string>
 </resources>
